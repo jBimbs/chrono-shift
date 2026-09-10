@@ -1,69 +1,59 @@
-import Image from "next/image";
+import Countdown from "@/components/Countdown";
 
-export default function Home() {
+export default function ChronoShiftHero() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className="relative min-h-screen overflow-x-hidden bg-[#050505]">
+      <div className="starfield" />
+
+      <section className="hero-vignette relative z-10 flex flex-col items-center px-6 pb-20 pt-20 text-center sm:pt-28">
+        {/* Logo — replace src with your actual logo path once you have the file in /public */}
+        <img
+          src="/ins-logo.png"
+          alt="ChronoShift logo"
+          className="relative z-10 mb-6 h-14 w-auto sm:h-16"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+
+        <div className="mb-8 flex items-center gap-4 text-[11px] font-medium tracking-[0.4em] text-white/45">
+          <span className="h-px w-10 bg-white/20" />
+          YEAR-END EVENT
+          <span className="h-px w-10 bg-white/20" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Ghost watermark text behind the headline */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-24 left-1/2 -z-10 w-[140%] -translate-x-1/2 select-none whitespace-nowrap font-display text-[22vw] font-black leading-none ghost-text sm:top-28"
+        >
+          CHRONOSHIFT
         </div>
-      </main>
-    </div>
+
+        <h1 className="font-display font-black leading-[0.95] tracking-tight">
+          <span className="metal-text block whitespace-nowrap text-[13vw] sm:text-[7rem] lg:text-[8rem]">
+            CHRONOSHIFT
+          </span>
+        </h1>
+
+        <div className="mt-10 border border-white/15 px-6 py-3 text-xs font-medium tracking-[0.2em] text-white/60 sm:text-sm">
+          DECEMBER 14, 2026 · TIME TBA&nbsp;&nbsp;|&nbsp;&nbsp;MAKATI CITY
+        </div>
+      </section>
+
+      <section className="relative z-10 flex flex-col items-center px-6 pb-24">
+        <Countdown />
+        <div className="mt-16 mb-10 flex items-center gap-4 text-[11px] font-medium tracking-[0.4em] text-white/45">
+          <span className="h-px w-10 bg-white/20" />
+          UNTIL THE SHIFT
+          <span className="h-px w-10 bg-white/20" />
+        </div>
+        <a href="/rsvp" className="metal-button px-10 py-4 text-sm font-semibold tracking-[0.2em] text-black transition-transform hover:scale-[1.02]">
+          RESERVE ACCESS
+        </a>
+      </section>
+
+      <footer className="relative z-10 flex items-center justify-between border-t border-white/[0.08] px-6 py-6 text-[11px] tracking-[0.15em] text-white/35 sm:px-10">
+        <span>© 2026 INTERCOMMERCE</span>
+        <span>TIME IS A CONSTRUCT</span>
+      </footer>
+    </main>
   );
 }
