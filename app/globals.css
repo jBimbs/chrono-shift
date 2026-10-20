@@ -68,3 +68,31 @@
 .twinkle {
   animation: twinkle 4s ease-in-out infinite;
 }
+
+/* ---------- Wall of Thoughts: floating cards ---------- */
+
+/* Each lane rises by one full loop (--loop is set on .float-field by the page) */
+@keyframes rise {
+  from { transform: translateY(0); }
+  to   { transform: translateY(calc(var(--loop) * -1)); }
+}
+
+/* Small sideways drift, stays inside the card's lane */
+@keyframes sway {
+  from { transform: translateX(calc(var(--dx) * -1)); }
+  to   { transform: translateX(var(--dx)); }
+}
+
+.float-card { will-change: transform; }
+.float-lane { will-change: transform; }
+
+/* Pause EVERYTHING when any card is hovered, so cards stay evenly spaced */
+.float-field:has(.float-card:hover) .float-lane,
+.float-field:has(.float-card:hover) .float-card {
+  animation-play-state: paused !important;
+}
+.float-field:has(.float-card:hover) { z-index: 30; }
+
+@media (prefers-reduced-motion: reduce) {
+  .float-card { animation: none !important; }
+}

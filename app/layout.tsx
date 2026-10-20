@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Orbitron, Rajdhani } from "next/font/google";
 import "./globals.css";
-import Nav from "../components/Nav";
-
+// import Nav from "@/components/Nav-1";   // delete this import line
 const orbitron = Orbitron({
   subsets: ["latin"],
   weight: ["500", "700", "900"],
@@ -16,7 +15,7 @@ const rajdhani = Rajdhani({
 });
 
 export const metadata: Metadata = {
-  title: "ChronoShift — Year-End Event",
+  title: "ChronoShift",
   description: "December 14, 2026 · The Nexus, NYC",
 };
 
@@ -26,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${orbitron.variable} ${rajdhani.variable}`}>
       <body>
-        <Nav />
+        {/* <Nav /> */}
         {children}
       </body>
     </html>
