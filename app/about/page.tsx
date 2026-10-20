@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import type { JSX } from "react";
 type Milestone = {
   year: string;
   text: string;
