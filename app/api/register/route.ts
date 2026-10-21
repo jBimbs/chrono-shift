@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-server";
 
-const ALLOWED_DOMAIN = "@intercommerce.com.ph";
+const ALLOWED_DOMAIN = ["@intercommerce.com.ph", "@ictechnologies.ph"];
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_NICKNAME_LEN = 24;
 
@@ -42,9 +42,9 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!email.endsWith(ALLOWED_DOMAIN)) {
+  if (!ALLOWED_DOMAIN.some((domain) => email.endsWith(domain))) {
     return NextResponse.json(
-      { error: `Registration is limited to ${ALLOWED_DOMAIN} email addresses.` },
+      { error: `Registration is limited to ${ALLOWED_DOMAIN.join(" or ")} email addresses.` },
       { status: 400 }
     );
   }

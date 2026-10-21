@@ -9,7 +9,6 @@ const DEPARTMENTS = [
   "Customer Support",
   "Business Solutions",
   "Finance and Admin/HR",
-  "Human Resources",
   "Sales and Marketing",
   "ELMIS",
 ];
@@ -200,8 +199,8 @@ export default function RegisterPage() {
                   name="email"
                   type="email"
                   required
-                  pattern="^[a-zA-Z0-9._%+-]+@intercommerce\.com\.ph$"
-                  title="Please use your @intercommerce.com.ph email address"
+                  pattern="^[a-zA-Z0-9._%+-]+@(intercommerce\.com\.ph|ictechnologies\.ph)$"
+                  title="Please use your @intercommerce.com.ph or @ictechnologies.ph email address"
                   className={inputClass}
                   placeholder="jane@intercommerce.com.ph"
                 />
