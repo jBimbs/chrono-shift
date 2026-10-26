@@ -33,11 +33,6 @@ const MAX_PICK_BYTES = 12 * 1024 * 1024;
 const EMAIL_RE = /^[a-zA-Z0-9._%+-]+@intercommerce\.com\.ph$/i;
 const EMAIL_KEY = "wall-email";
 
-// Floating layout: every card drifts at the same speed and gets its own
-// vertical slot, so cards never catch up to each other.
-const SLOT_PX = 250; // vertical space reserved per card (taller than the tallest card)
-const SPEED_PX_S = 28; // drift speed in px per second, same for every card
-
 function timeAgo(iso: string) {
   const seconds = Math.max(
     0,
@@ -54,14 +49,6 @@ function timeAgo(iso: string) {
 
 function eraColor(team: string | null) {
   return (team ? ERAS[team]?.color : null) ?? "#ffffff";
-}
-
-function hashId(id: string) {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) {
-    h = (h * 31 + id.charCodeAt(i)) | 0;
-  }
-  return Math.abs(h);
 }
 
 // Shrinks big photos so uploads stay fast (GIFs are left untouched)
@@ -239,7 +226,6 @@ function CommentSection({
   );
 }
 
-// Full post (shown inside the popup when a floating card is opened)
 function PostCard({
   thought,
   email,
@@ -356,119 +342,6 @@ function PostCard({
   );
 }
 
-// A card that rises through the panel. All cards share one speed and are
-// evenly spaced along the loop, so they never catch up to each other.
-function FloatingCard({
-  thought,
-  onOpen,
-  lane,
-  slot,
-  perLane,
-  duration,
-}: {
-  thought: Thought;
-  onOpen: (id: string) => void;
-  lane: number; // 0 = left, 1 = right
-  slot: number; // position within its lane
-  perLane: number; // cards per lane
-  duration: number; // seconds for one full loop (same for all cards)
-}) {
-  const h = hashId(thought.id);
-  const r = (shift: number) => ((h >> shift) & 255) / 255;
-
-  // Evenly spaced start; right lane is offset by half a slot to stagger
-  const riseDelay = -((slot + lane * 0.5) / perLane) * duration;
-
-  // Small sideways drift that stays inside the lane
-  const left = lane * 50 + 2 + r(3) * 3;
-  const swayDuration = 8 + r(16) * 8;
-  const swayDelay = -r(2) * swayDuration;
-  const dx = (r(20) - 0.5) * 20;
-
-  const color = eraColor(thought.team);
-  const totalReactions = Object.values(thought.reactions).reduce(
-    (a, b) => a + b,
-    0
-  );
-
-  return (
-    <div
-      className="float-lane pointer-events-none absolute inset-x-0 top-full"
-      style={{
-        animation: `rise ${duration}s linear ${riseDelay}s infinite`,
-      }}
-    >
-      <div
-        className="absolute top-0"
-        style={{ left: `${left}%`, width: "clamp(140px, 40%, 240px)" }}
-      >
-        <button
-          type="button"
-          onClick={() => onOpen(thought.id)}
-          className="float-card pointer-events-auto block w-full border bg-black/75 p-3 text-left backdrop-blur-sm transition-colors hover:bg-black/90"
-          style={
-            {
-              borderColor: `${color}55`,
-              boxShadow: `0 0 24px ${color}18`,
-              "--dx": `${dx}px`,
-              animation: `sway ${swayDuration}s ease-in-out ${swayDelay}s infinite alternate`,
-            } as React.CSSProperties
-          }
-        >
-          <div className="flex items-center gap-2">
-            <div
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[10px] font-semibold"
-              style={{
-                borderColor: `${color}88`,
-                background: `${color}1a`,
-                color,
-              }}
-            >
-              {thought.author.trim().charAt(0).toUpperCase() || "?"}
-            </div>
-            <span className="truncate text-[11px] font-semibold tracking-wide text-white/75">
-              {thought.author}
-            </span>
-            {thought.team && (
-              <span
-                className="ml-auto shrink-0 text-[9px] font-semibold tracking-[0.1em]"
-                style={{ color }}
-              >
-                {thought.team}
-              </span>
-            )}
-          </div>
-
-          <p className="mt-2 line-clamp-4 break-words text-[12px] leading-relaxed text-white/70">
-            {thought.message}
-          </p>
-
-          {thought.imageUrl && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={thought.imageUrl}
-              alt=""
-              loading="lazy"
-              className="mt-2 h-20 w-full border border-white/10 object-cover"
-            />
-          )}
-
-          <div className="mt-2 flex items-center justify-between text-[10px] tracking-[0.12em] text-white/35">
-            <span>
-              {totalReactions > 0
-                ? `${totalReactions} ♥`
-                : timeAgo(thought.createdAt)}
-            </span>
-            <span>
-              {thought.commentCount > 0 ? `${thought.commentCount} 💬` : ""}
-            </span>
-          </div>
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export default function WallPage() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [wallLoading, setWallLoading] = useState(true);
@@ -482,30 +355,10 @@ export default function WallPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
-  const [activeId, setActiveId] = useState<string | null>(null);
 
   const emailRef = useRef("");
   const fileRef = useRef<HTMLInputElement>(null);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Measure the floating panel so the loop is always tall enough
-  const panelRef = useRef<HTMLElement>(null);
-  const [panelH, setPanelH] = useState(700);
-
-  useEffect(() => {
-    const el = panelRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => setPanelH(el.clientHeight));
-    ro.observe(el);
-    setPanelH(el.clientHeight);
-    return () => ro.disconnect();
-  }, []);
-
-  const perLane = Math.max(1, Math.ceil(thoughts.length / 2));
-  // Loop is at least as long as the panel (+ room to exit), and long enough
-  // that every card in a lane gets its own SLOT_PX of space
-  const loopPx = Math.max(panelH + 300, perLane * SLOT_PX);
-  const loopDuration = loopPx / SPEED_PX_S;
 
   const showNotice = useCallback((msg: string) => {
     setNotice(msg);
@@ -558,16 +411,6 @@ export default function WallPage() {
     setPreview(url);
     return () => URL.revokeObjectURL(url);
   }, [image]);
-
-  // Close the popup with Escape
-  useEffect(() => {
-    if (!activeId) return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setActiveId(null);
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [activeId]);
 
   function handleEmailChange(value: string) {
     setEmail(value);
@@ -664,10 +507,6 @@ export default function WallPage() {
       prev.map((t) => (t.id === id ? { ...t, commentCount: count } : t))
     );
   }
-
-  const activeThought = activeId
-    ? thoughts.find((t) => t.id === activeId) ?? null
-    : null;
 
   return (
     <main className="relative flex min-h-screen flex-col bg-[#050505] pt-20 lg:h-screen lg:overflow-hidden">
@@ -809,45 +648,34 @@ export default function WallPage() {
           </div>
         </section>
 
-        {/* RIGHT HALF: thoughts scrolling through space */}
-        <section
-          ref={panelRef}
-          className="float-field relative h-[75vh] overflow-hidden lg:h-auto"
-          style={
-            {
-              "--loop": `${loopPx}px`,
-              maskImage:
-                "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-            } as React.CSSProperties
-          }
-        >
-          {wallLoading ? (
-            <p className="absolute inset-0 flex items-center justify-center text-sm tracking-wide text-white/40">
-              Loading the wall...
-            </p>
-          ) : wallError ? (
-            <p className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm tracking-wide text-red-400/80">
-              {wallError}
-            </p>
-          ) : thoughts.length === 0 ? (
-            <p className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm tracking-wide text-white/40">
-              The wall is empty. Be the first to leave a thought.
-            </p>
-          ) : (
-            thoughts.map((t, i) => (
-              <FloatingCard
-                key={t.id}
-                thought={t}
-                onOpen={setActiveId}
-                lane={i % 2}
-                slot={Math.floor(i / 2)}
-                perLane={perLane}
-                duration={loopDuration}
-              />
-            ))
-          )}
+        {/* RIGHT HALF: scrollable feed of posts */}
+        <section className="relative px-4 py-8 sm:px-8 lg:overflow-y-auto lg:px-10">
+          <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+            {wallLoading ? (
+              <p className="py-20 text-center text-sm tracking-wide text-white/40">
+                Loading the wall...
+              </p>
+            ) : wallError ? (
+              <p className="py-20 text-center text-sm tracking-wide text-red-400/80">
+                {wallError}
+              </p>
+            ) : thoughts.length === 0 ? (
+              <p className="py-20 text-center text-sm tracking-wide text-white/40">
+                The wall is empty. Be the first to leave a thought.
+              </p>
+            ) : (
+              thoughts.map((t) => (
+                <PostCard
+                  key={t.id}
+                  thought={t}
+                  email={email}
+                  onReact={handleReact}
+                  onNotice={showNotice}
+                  onCommentCount={handleCommentCount}
+                />
+              ))
+            )}
+          </div>
         </section>
       </div>
 
@@ -855,35 +683,6 @@ export default function WallPage() {
         <span>© 2026 INTERCOMMERCE</span>
         <span>TIME IS A CONSTRUCT</span>
       </footer>
-
-      {/* Popup for an opened thought */}
-      {activeThought && (
-        <div
-          className="fixed inset-0 z-[45] flex items-start justify-center overflow-y-auto bg-black/80 px-4 py-24 backdrop-blur-sm"
-          onClick={() => setActiveId(null)}
-        >
-          <div
-            className="relative w-full max-w-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setActiveId(null)}
-              aria-label="Close"
-              className="absolute -top-10 right-0 border border-white/30 bg-black/80 px-3 py-1 text-xs tracking-[0.2em] text-white/80 hover:text-white"
-            >
-              CLOSE ✕
-            </button>
-            <PostCard
-              thought={activeThought}
-              email={email}
-              onReact={handleReact}
-              onNotice={showNotice}
-              onCommentCount={handleCommentCount}
-            />
-          </div>
-        </div>
-      )}
     </main>
   );
 }
