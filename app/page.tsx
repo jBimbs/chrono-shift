@@ -151,17 +151,20 @@ const FX_CSS = `
 
 export default function ChronoShiftHero() {
   return (
-    <main className="glitch-page relative min-h-screen overflow-x-hidden bg-[#050505]">
+    <main className="glitch-page page-main relative bg-[#050505] max-lg:min-h-screen max-lg:overflow-x-hidden">
       <style dangerouslySetInnerHTML={{ __html: FX_CSS }} />
       <div className="starfield" />
+      <div className="particles" aria-hidden />
       <div className="scanlines" aria-hidden />
       <div className="glitch-bar" aria-hidden />
 
-      <section className="hero-vignette relative z-10 flex flex-col items-center px-6 pb-20 pt-20 text-center sm:pt-28">
-        {/* Logo — replace src with your actual logo path once you have the file in /public */}
-        
+      {/* Silver clock background overlay */}
+      <div className="clock-overlay" aria-hidden="true" />
 
-        <div className="mb-8 flex items-center gap-4 text-[11px] font-medium tracking-[0.4em] text-white/45">
+      <section className="hero-vignette relative z-10 flex flex-col items-center px-6 pb-20 pt-20 text-center sm:pt-28 lg:min-h-0 lg:flex-1 lg:justify-center lg:pb-[2vh] lg:pt-[3vh]">
+        {/* Logo — replace src with your actual logo path once you have the file in /public */}
+
+        <div className="mb-8 flex items-center gap-4 text-[11px] font-medium tracking-[0.4em] text-white/45 lg:mb-[2vh]">
           <span className="h-px w-10 bg-white/20" />
           YEAR-END PARTY
           <span className="h-px w-10 bg-white/20" />
@@ -176,20 +179,20 @@ export default function ChronoShiftHero() {
         </div>
 
         <h1 className="glitch-wrap relative font-display font-black leading-[0.95] tracking-tight">
-          <span className="glitch-base metal-text block whitespace-nowrap text-[13vw] sm:text-[7rem] lg:text-[8rem]">
+          <span className="glitch-base metal-text block whitespace-nowrap text-[13vw] sm:text-[7rem] lg:text-[min(8rem,13vh)]">
             CHRONOSHIFT
           </span>
 
           {/* RGB-split glitch layers */}
           <span
             aria-hidden
-            className="glitch-layer glitch-cyan text-[13vw] sm:text-[7rem] lg:text-[8rem]"
+            className="glitch-layer glitch-cyan text-[13vw] sm:text-[7rem] lg:text-[min(8rem,13vh)]"
           >
             CHRONOSHIFT
           </span>
           <span
             aria-hidden
-            className="glitch-layer glitch-magenta text-[13vw] sm:text-[7rem] lg:text-[8rem]"
+            className="glitch-layer glitch-magenta text-[13vw] sm:text-[7rem] lg:text-[min(8rem,13vh)]"
           >
             CHRONOSHIFT
           </span>
@@ -197,27 +200,28 @@ export default function ChronoShiftHero() {
           {/* Light passing through the letters */}
           <span
             aria-hidden
-            className="shine-text absolute inset-0 block whitespace-nowrap text-[13vw] sm:text-[7rem] lg:text-[8rem]"
+            className="shine-text absolute inset-0 block whitespace-nowrap text-[13vw] sm:text-[7rem] lg:text-[min(8rem,13vh)]"
           >
             CHRONOSHIFT
           </span>
         </h1>
 
-        <div className="mt-10 border border-white/15 px-6 py-3 text-xs font-medium tracking-[0.2em] text-white/60 sm:text-sm">
-          DECEMBER 14, 2026 · TIME TBA&nbsp;&nbsp;|&nbsp;&nbsp;Enderun College Atrium and The Courtyard
+        <div className="mt-10 border border-white/15 px-6 py-3 text-xs font-medium tracking-[0.2em] text-white/60 sm:text-sm lg:mt-[3vh]">
+          DECEMBER 14, 2026 · REGISTRATION STARTS AT 6PM&nbsp;&nbsp;|&nbsp;&nbsp;Enderun College Atrium and The Courtyard
         </div>
       </section>
 
-      <section className="relative z-10 flex flex-col items-center px-6 pb-24">
+      <section className="relative z-10 flex flex-col items-center px-6 pb-24 lg:pb-[3vh]">
         <Countdown />
-        <div className="mt-16 mb-10 flex items-center gap-4 text-[11px] font-medium tracking-[0.4em] text-white/45">
+        <div className="mt-16 mb-10 flex items-center gap-4 text-[11px] font-medium tracking-[0.4em] text-white/45 lg:mb-[2vh] lg:mt-[3vh]">
           <span className="h-px w-10 bg-white/20" />
           UNTIL THE SHIFT
           <span className="h-px w-10 bg-white/20" />
         </div>
         <ReserveButton />
       </section>
-      <footer className="relative z-10 flex items-center justify-between border-t border-white/[0.08] px-6 py-6 text-[11px] tracking-[0.15em] text-white/35 sm:px-10">
+
+      <footer className="relative z-10 flex items-center justify-between border-t border-white/[0.08] px-6 py-6 text-[11px] tracking-[0.15em] text-white/35 sm:px-10 lg:py-3">
         <span>© 2026 INTERCOMMERCE</span>
         <span>TIME IS A CONSTRUCT</span>
       </footer>

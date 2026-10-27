@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-server";
+import { getAssignedTeam } from "@/lib/team-assignments";
 
 const ALLOWED_DOMAIN = ["@intercommerce.com.ph", "@ictechnologies.ph"];
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,9 +43,17 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!ALLOWED_DOMAIN.some((domain) => email.endsWith(domain))) {
+  // Team from the preassigned list (null if the email isn't on it)
+  const assignedTeam = getAssignedTeam(email);
+
+  // Allowed company domains, plus anyone on the preassigned list
+  // (a few listed people use gmail/yahoo addresses)
+  const domainAllowed = ALLOWED_DOMAIN.some((domain) => email.endsWith(domain));
+  if (!domainAllowed && !assignedTeam) {
     return NextResponse.json(
-      { error: `Registration is limited to ${ALLOWED_DOMAIN.join(" or ")} email addresses.` },
+      {
+        error: `Registration is limited to ${ALLOWED_DOMAIN.join(" or ")} email addresses.`,
+      },
       { status: 400 }
     );
   }
@@ -66,8 +75,17 @@ export async function POST(request: Request) {
     }
 
     if (existing?.team) {
+      // The preassigned team wins, and fixes older randomly assigned rows
+      const team = assignedTeam ?? existing.team;
+      if (assignedTeam && existing.team !== assignedTeam) {
+        await supabaseAdmin
+          .from("registrations")
+          .update({ team: assignedTeam })
+          .eq("email", email);
+      }
+
       return NextResponse.json(
-        { success: true, team: existing.team, alreadyRegistered: true },
+        { success: true, team, alreadyRegistered: true },
         { status: 200 }
       );
     }
@@ -100,6 +118,67 @@ export async function POST(request: Request) {
     );
   }
 
+  // Preassigned employee: use their assigned team, no random draw
+  if (assignedTeam) {
+    const { data: existing, error: existingError } = await supabaseAdmin
+      .from("registrations")
+      .select("team")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (existingError) {
+      console.error("Supabase lookup error:", existingError);
+      return NextResponse.json(
+        { error: "Something went wrong. Please try again." },
+        { status: 500 }
+      );
+    }
+
+    if (existing) {
+      if (existing.team !== assignedTeam) {
+        await supabaseAdmin
+          .from("registrations")
+          .update({ team: assignedTeam })
+          .eq("email", email);
+      }
+      return NextResponse.json(
+        { success: true, team: assignedTeam, alreadyRegistered: true },
+        { status: 200 }
+      );
+    }
+
+    const { error: insertError } = await supabaseAdmin
+      .from("registrations")
+      .insert({
+        name,
+        email,
+        department,
+        nickname,
+        team: assignedTeam,
+      });
+
+    if (insertError) {
+      // 23505 = unique violation: they registered a moment ago in another tab
+      if (insertError.code === "23505") {
+        return NextResponse.json(
+          { success: true, team: assignedTeam, alreadyRegistered: true },
+          { status: 200 }
+        );
+      }
+      console.error("Supabase insert error:", insertError);
+      return NextResponse.json(
+        { error: "Something went wrong. Please try again." },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { success: true, team: assignedTeam, alreadyRegistered: false },
+      { status: 201 }
+    );
+  }
+
+  // Not on the preassigned list: fall back to the random team draw
   const { data, error } = await supabaseAdmin.rpc("register_with_random_team", {
     p_name: name,
     p_email: email,

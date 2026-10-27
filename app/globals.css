@@ -23,6 +23,70 @@
   background-repeat: no-repeat;
 }
 
+/* ---------- Moving particles on EVERY page ----------
+   One fixed layer attached to <body>, so no page needs to add anything.
+   Three tiled dot layers at different depths and speeds. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    /* near: larger, glowing */
+    radial-gradient(2.5px 2.5px at 90px 120px, rgba(255,255,255,0.9) 40%, rgba(255,255,255,0.15) 70%, transparent 72%),
+    radial-gradient(2px 2px at 380px 260px, rgba(255,255,255,0.8) 40%, rgba(255,255,255,0.12) 70%, transparent 72%),
+    radial-gradient(2.5px 2.5px at 240px 420px, rgba(255,255,255,0.85) 40%, rgba(255,255,255,0.15) 70%, transparent 72%),
+    /* middle */
+    radial-gradient(1.5px 1.5px at 60px 80px, rgba(255,255,255,0.8) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 210px 160px, rgba(255,255,255,0.6) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 320px 300px, rgba(255,255,255,0.7) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 120px 340px, rgba(255,255,255,0.55) 50%, transparent 51%),
+    /* far: small */
+    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 140px 90px, rgba(255,255,255,0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 260px 200px, rgba(255,255,255,0.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 90px 250px, rgba(255,255,255,0.45) 50%, transparent 51%),
+    radial-gradient(1px 1px at 330px 40px, rgba(255,255,255,0.55) 50%, transparent 51%);
+  background-repeat: repeat;
+  /* each size repeats once per group of dots above:
+     near = 520px tile (3 dots), middle = 420px (4 dots), far = 360px (5 dots) */
+  background-size:
+    520px 520px, 520px 520px, 520px 520px,
+    420px 420px, 420px 420px, 420px 420px, 420px 420px,
+    360px 360px, 360px 360px, 360px 360px, 360px 360px, 360px 360px;
+  animation:
+    particles-drift 120s linear infinite,
+    particles-twinkle 6s ease-in-out infinite;
+  will-change: background-position, opacity;
+}
+
+/* Every layer moves a whole number of tiles per loop, so it never jumps.
+   Speed differs per layer: near is fastest, far is slowest. */
+@keyframes particles-drift {
+  from {
+    background-position:
+      0 0, 0 0, 0 0,
+      0 0, 0 0, 0 0, 0 0,
+      0 0, 0 0, 0 0, 0 0, 0 0;
+  }
+  to {
+    background-position:
+      520px -2080px, 520px -2080px, 520px -2080px,
+      -420px -840px, -420px -840px, -420px -840px, -420px -840px,
+      360px -360px, 360px -360px, 360px -360px, 360px -360px, 360px -360px;
+  }
+}
+
+@keyframes particles-twinkle {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+}
+
 .hero-vignette {
   background: radial-gradient(ellipse 60% 45% at 50% 38%, rgba(255,255,255,0.05), transparent 70%);
 }
@@ -69,30 +133,32 @@
   animation: twinkle 4s ease-in-out infinite;
 }
 
-/* ---------- Wall of Thoughts: floating cards ---------- */
-
-/* Each lane rises by one full loop (--loop is set on .float-field by the page) */
-@keyframes rise {
-  from { transform: translateY(0); }
-  to   { transform: translateY(calc(var(--loop) * -1)); }
+/* ---------- Silver clock background ---------- */
+.clock-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
 }
 
-/* Small sideways drift, stays inside the card's lane */
-@keyframes sway {
-  from { transform: translateX(calc(var(--dx) * -1)); }
-  to   { transform: translateX(var(--dx)); }
+.clock-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/images/chronoshift-clock-silver.png");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: auto 78%;
+  opacity: 0.72;
+  filter: grayscale(1) brightness(0.9);
 }
 
-.float-card { will-change: transform; }
-.float-lane { will-change: transform; }
-
-/* Pause EVERYTHING when any card is hovered, so cards stay evenly spaced */
-.float-field:has(.float-card:hover) .float-lane,
-.float-field:has(.float-card:hover) .float-card {
-  animation-play-state: paused !important;
-}
-.float-field:has(.float-card:hover) { z-index: 30; }
-
-@media (prefers-reduced-motion: reduce) {
-  .float-card { animation: none !important; }
+/* Keep the clock subtle on smaller screens */
+@media (max-width: 768px) {
+  .clock-overlay::before {
+    background-size: auto 50%;
+    background-position: left center;
+    opacity: 0.35;
+  }
 }

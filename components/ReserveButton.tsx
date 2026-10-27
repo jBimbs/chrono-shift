@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-// Oct 30, 2026 18:00 Manila time (UTC+8)
-const OPEN_AT = new Date("2026-10-30T18:00:00+08:00").getTime();
+// Oct 30, 2026 15:00 Manila time (UTC+8)
+const OPEN_AT = new Date("2026-10-30T15:00:00+08:00").getTime();
 
 const baseClass =
   "metal-button px-10 py-4 text-sm font-semibold tracking-[0.2em] text-black";
@@ -41,7 +41,7 @@ export default function ReserveButton() {
          RESERVE ACCESS
       </button>
       <span className="text-[11px] font-medium tracking-[0.3em] text-white/45">
-        OPENS OCTOBER 30 6PM
+        OPENS OCTOBER 30 3PM
       </span>
     </div>
   );
