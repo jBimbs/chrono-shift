@@ -207,7 +207,7 @@ export default function ChronoShiftHero() {
         </h1>
 
         <div className="mt-10 border border-white/15 px-6 py-3 text-xs font-medium tracking-[0.2em] text-white/60 sm:text-sm lg:mt-[3vh]">
-          DECEMBER 14, 2026 · REGISTRATION STARTS AT 6PM&nbsp;&nbsp;|&nbsp;&nbsp;Enderun College Atrium and The Courtyard
+          DECEMBER 14, 2026 · REGISTRATION STARTS AT 5 PM&nbsp;&nbsp;|&nbsp;&nbsp;Enderun College Atrium and The Courtyard
         </div>
       </section>
 

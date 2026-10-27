@@ -41,7 +41,7 @@ export default function ReserveButton() {
          RESERVE ACCESS
       </button>
       <span className="text-[11px] font-medium tracking-[0.3em] text-white/45">
-        OPENS OCTOBER 30 3PM
+        OPENS OCTOBER 30
       </span>
     </div>
   );
