@@ -111,11 +111,11 @@ export function getAssignedGroup(email: string): number | null {
 }
 
 const GROUP_TO_TEAM: Record<number, string> = {
-  1: "1980",
-  2: "1990",
-  3: "2000",
+  1: "2020",
+  2: "2000",
+  3: "1980",
   4: "2010",
-  5: "2020",
+  5: "1990",
   6: "2030",
 };
 

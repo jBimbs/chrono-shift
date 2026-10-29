@@ -1,10 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 
-const EMAIL_RE = /^[a-zA-Z0-9._%+-]+@intercommerce\.com\.ph$/i;
-
-export function isCompanyEmail(email: string) {
-  return EMAIL_RE.test(email);
-}
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export type Employee = {
   email: string;
@@ -15,7 +11,7 @@ export type Employee = {
 // Returns the registered employee for an email, or null if not registered
 export async function findEmployee(rawEmail: string): Promise<Employee | null> {
   const email = rawEmail.trim().toLowerCase();
-  if (!isCompanyEmail(email)) return null;
+  if (!EMAIL_RE.test(email)) return null;
 
   const { data, error } = await supabaseAdmin
     .from("registrations")

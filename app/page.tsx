@@ -161,9 +161,8 @@ export default function ChronoShiftHero() {
       {/* Silver clock background overlay */}
       <div className="clock-overlay" aria-hidden="true" />
 
-      <section className="hero-vignette relative z-10 flex flex-col items-center px-6 pb-20 pt-20 text-center sm:pt-28 lg:min-h-0 lg:flex-1 lg:justify-center lg:pb-[2vh] lg:pt-[3vh]">
-        {/* Logo — replace src with your actual logo path once you have the file in /public */}
-
+      {/* Hero: no longer stretches to fill the screen (lg:flex-none) */}
+      <section className="hero-vignette relative z-10 flex flex-col items-center px-6 pb-20 pt-20 text-center sm:pt-28 lg:min-h-0 lg:flex-none lg:pb-0 lg:pt-[14vh]">
         <div className="mb-8 flex items-center gap-4 text-[11px] font-medium tracking-[0.4em] text-white/45 lg:mb-[2vh]">
           <span className="h-px w-10 bg-white/20" />
           YEAR-END PARTY
@@ -206,14 +205,17 @@ export default function ChronoShiftHero() {
           </span>
         </h1>
 
-        <div className="mt-10 border border-white/15 px-6 py-3 text-xs font-medium tracking-[0.2em] text-white/60 sm:text-sm lg:mt-[3vh]">
-          DECEMBER 14, 2026 · REGISTRATION STARTS AT 5 PM&nbsp;&nbsp;|&nbsp;&nbsp;Enderun College Atrium and The Courtyard
+        <div className="mt-10 flex flex-col items-center gap-1 border border-white/15 px-5 py-3 text-center text-xs font-medium tracking-[0.2em] text-white/60 sm:flex-row sm:gap-0 sm:px-6 sm:text-sm lg:mt-[3vh]">
+          <span>DECEMBER 14, 2026 · TIME TBA</span>
+          <span className="hidden sm:inline">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+          <span>Enderun College Atrium and The Courtyard</span>
         </div>
       </section>
 
-      <section className="relative z-10 flex flex-col items-center px-6 pb-24 lg:pb-[3vh]">
+      {/* Countdown: lg:pt-[5vh] controls the gap under the date box */}
+      <section className="relative z-10 flex flex-col items-center px-6 pb-24 lg:pb-[3vh] lg:pt-[5vh]">
         <Countdown />
-        <div className="mt-16 mb-10 flex items-center gap-4 text-[11px] font-medium tracking-[0.4em] text-white/45 lg:mb-[2vh] lg:mt-[3vh]">
+        <div className="mb-10 mt-16 flex items-center gap-4 text-[11px] font-medium tracking-[0.4em] text-white/45 lg:mb-[2vh] lg:mt-[3vh]">
           <span className="h-px w-10 bg-white/20" />
           UNTIL THE SHIFT
           <span className="h-px w-10 bg-white/20" />
@@ -221,7 +223,8 @@ export default function ChronoShiftHero() {
         <ReserveButton />
       </section>
 
-      <footer className="relative z-10 flex items-center justify-between border-t border-white/[0.08] px-6 py-6 text-[11px] tracking-[0.15em] text-white/35 sm:px-10 lg:py-3">
+      {/* Footer: lg:mt-auto pins it to the bottom */}
+      <footer className="relative z-10 flex flex-col items-center gap-1 border-t border-white/[0.08] px-6 py-6 text-[11px] tracking-[0.15em] text-white/35 sm:flex-row sm:justify-between sm:px-10 lg:mt-auto lg:py-3">
         <span>© 2026 INTERCOMMERCE</span>
         <span>TIME IS A CONSTRUCT</span>
       </footer>

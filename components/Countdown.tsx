@@ -28,22 +28,24 @@ function pad(n: number) {
 function UnitBox({ value, label }: { value: number; label: string }) {
   const digits = pad(value).split("");
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="flex h-24 w-36 items-center justify-center gap-1 border border-white/15 bg-white/[0.02] sm:h-28 sm:w-40">
+    <div className="flex flex-col items-center gap-3 sm:gap-4">
+      <div className="flex h-24 w-[min(9rem,42vw)] items-center justify-center gap-1 border border-white/15 bg-white/[0.02] sm:h-28 sm:w-40">
         {digits.map((d, i) => (
           <span key={i} className="digit-tile font-display text-5xl font-bold sm:text-6xl">
             {d}
           </span>
         ))}
       </div>
-      <span className="text-xs font-medium tracking-[0.35em] text-white/40">{label}</span>
+      <span className="text-[11px] font-medium tracking-[0.3em] text-white/40 sm:text-xs sm:tracking-[0.35em]">
+        {label}
+      </span>
     </div>
   );
 }
 
 function Sep() {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 self-start pt-8">
+    <div className="hidden flex-col items-center justify-center gap-2 self-start pt-8 sm:flex">
       <span className="h-1 w-1 rounded-full bg-white/25" />
       <span className="h-1 w-1 rounded-full bg-white/25" />
     </div>
@@ -62,7 +64,7 @@ export default function Countdown() {
   const t = time ?? { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
   return (
-    <div className="flex items-start justify-center gap-3 sm:gap-4">
+    <div className="grid grid-cols-2 justify-items-center gap-x-4 gap-y-6 sm:flex sm:items-start sm:justify-center sm:gap-4">
       <UnitBox value={t.days} label="DAYS" />
       <Sep />
       <UnitBox value={t.hours} label="HOURS" />

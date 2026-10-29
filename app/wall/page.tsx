@@ -30,7 +30,8 @@ const MAX_COMMENT = 300;
 const REFRESH_MS = 30_000;
 const MAX_DIM = 1600;
 const MAX_PICK_BYTES = 12 * 1024 * 1024;
-const EMAIL_RE = /^[a-zA-Z0-9._%+-]+@intercommerce\.com\.ph$/i;
+// Any valid email shape; the server checks the registrations table
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const EMAIL_KEY = "wall-email";
 
 function timeAgo(iso: string) {
@@ -212,7 +213,7 @@ function CommentSection({
           onChange={(e) => setText(e.target.value)}
           maxLength={MAX_COMMENT}
           placeholder="Write a comment..."
-          className="min-w-0 flex-1 border border-white/15 bg-white/[0.02] px-3 py-2 text-sm text-white outline-none placeholder:text-white/25 focus:border-white/40"
+          className="min-w-0 flex-1 border border-white/15 bg-white/[0.02] px-3 py-2 text-base text-white outline-none placeholder:text-white/25 focus:border-white/40 sm:text-sm"
         />
         <button
           type="submit"
@@ -279,7 +280,7 @@ function PostCard({
             src={thought.imageUrl}
             alt="Attached to this thought"
             loading="lazy"
-            className="mx-auto max-h-[420px] w-full object-contain"
+            className="mx-auto max-h-[60vh] w-full object-contain sm:max-h-[420px]"
           />
         </div>
       )}
@@ -310,7 +311,7 @@ function PostCard({
               type="button"
               onClick={() => onReact(thought.id, emoji)}
               aria-pressed={mine}
-              className={`flex items-center gap-1.5 border px-3 py-1.5 text-sm transition-colors ${
+              className={`flex items-center gap-1.5 border px-2.5 py-1.5 text-sm transition-colors sm:px-3 ${
                 mine
                   ? "border-white/60 bg-white/15 text-white"
                   : "border-white/15 text-white/60 hover:border-white/40"
@@ -324,7 +325,7 @@ function PostCard({
         <button
           type="button"
           onClick={() => setShowComments((v) => !v)}
-          className="ml-auto border border-white/15 px-3 py-1.5 text-[11px] font-semibold tracking-[0.2em] text-white/60 transition-colors hover:border-white/40 hover:text-white"
+          className="ml-auto border border-white/15 px-2.5 py-1.5 text-[11px] font-semibold tracking-[0.2em] text-white/60 transition-colors hover:border-white/40 hover:text-white sm:px-3"
         >
           {showComments ? "HIDE" : "COMMENT"}
         </button>
@@ -509,7 +510,7 @@ export default function WallPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col bg-[#050505] pt-20 lg:h-screen lg:overflow-hidden">
+    <main className="relative flex min-h-screen flex-col bg-[#050505] lg:h-[calc(100dvh-5.1rem)] lg:overflow-hidden">
       <div className="starfield" />
 
       {notice && (
@@ -553,12 +554,11 @@ export default function WallPage() {
                   id="wall-email"
                   type="email"
                   required
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => handleEmailChange(e.target.value)}
                   onBlur={handleEmailBlur}
-                  pattern="^[a-zA-Z0-9._%+-]+@intercommerce\.com\.ph$"
-                  title="Please use your @intercommerce.com.ph email address"
-                  className="border border-white/15 bg-white/[0.02] px-4 py-3 text-sm text-white outline-none placeholder:text-white/25 focus:border-white/40"
+                  className="border border-white/15 bg-white/[0.02] px-4 py-3 text-base text-white outline-none placeholder:text-white/25 focus:border-white/40 sm:text-sm"
                   placeholder="jane@intercommerce.com.ph"
                 />
                 <span className="text-xs text-white/30">
@@ -587,7 +587,7 @@ export default function WallPage() {
                   maxLength={MAX_LEN}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="resize-none border border-white/15 bg-white/[0.02] px-4 py-3 text-sm text-white outline-none placeholder:text-white/25 focus:border-white/40"
+                  className="resize-none border border-white/15 bg-white/[0.02] px-4 py-3 text-base text-white outline-none placeholder:text-white/25 focus:border-white/40 sm:text-sm"
                   placeholder="What's on your mind?"
                 />
                 <span className="self-end text-xs text-white/30">
@@ -618,7 +618,9 @@ export default function WallPage() {
                 <p className="text-sm text-red-400/80">{formError}</p>
               )}
               {success && (
-                <p className="text-sm text-white/70">Posted. It's on the wall.</p>
+                <p className="text-sm text-white/70">
+                  Posted. It&apos;s on the wall.
+                </p>
               )}
 
               <div className="flex items-center gap-3">
@@ -679,7 +681,7 @@ export default function WallPage() {
         </section>
       </div>
 
-      <footer className="relative z-10 flex shrink-0 items-center justify-between border-t border-white/[0.08] bg-[#050505] px-6 py-4 text-[11px] tracking-[0.15em] text-white/35 sm:px-10">
+      <footer className="relative z-10 flex shrink-0 flex-col items-center gap-1 border-t border-white/[0.08] bg-[#050505] px-6 py-4 text-[11px] tracking-[0.15em] text-white/35 sm:flex-row sm:justify-between sm:px-10">
         <span>© 2026 INTERCOMMERCE</span>
         <span>TIME IS A CONSTRUCT</span>
       </footer>
