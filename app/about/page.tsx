@@ -138,7 +138,7 @@ export default function AboutPage() {
           <div className="relative aspect-video w-full overflow-hidden border border-white/15 bg-black shadow-[0_0_40px_rgba(255,255,255,0.08)]">
             <video
   className="h-full w-full object-cover"
-  src="/images/Trailer.mp4"
+  src="/videos/Trailer_ins.mp4"
   poster="https://libmvhwcvwjadzflpezo.supabase.co/storage/v1/object/public/videos/trailer-poster.jpg"
   controls
   playsInline

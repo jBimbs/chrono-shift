@@ -134,10 +134,7 @@ function VenueDetails() {
       >
         <div className="min-h-0 pt-4">
           <p className="text-sm leading-relaxed tracking-wide text-white/50">
-            Placeholder venue details go here — parking information, entrance
-            instructions, nearby landmarks, dress code, or anything else
-            guests should know before arriving. Replace this text once the
-            real details are ready.
+            Enderun Colleges, located in McKinley Hill, Taguig City, is a prestigious educational institution known for its modern campus and elegant architecture. Its distinctive brick façade and landscaped surroundings create a welcoming atmosphere for students, faculty, and visitors.
           </p>
         </div>
       </div>
