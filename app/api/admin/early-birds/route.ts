@@ -41,19 +41,21 @@ export async function POST(request: Request) {
     .from("registrations")
     .select("name, nickname, email, department, team, created_at")
     .order("created_at", { ascending: true })
-    .limit(EARLY_BIRD_COUNT);
-
-  const { count } = await supabaseAdmin
-    .from("registrations")
-    .select("id", { count: "exact", head: true });
+    .limit(5000);
 
   if (error) {
-    console.error("Early birds error:", error);
+    console.error("Registrations error:", error);
     return NextResponse.json(
       { error: "Could not load registrations." },
       { status: 500 }
     );
   }
 
-  return NextResponse.json({ earlyBirds: data, total: count ?? data.length });
+  const registrations = data ?? [];
+
+  return NextResponse.json({
+    earlyBirds: registrations.slice(0, EARLY_BIRD_COUNT),
+    registrations,
+    total: registrations.length,
+  });
 }
