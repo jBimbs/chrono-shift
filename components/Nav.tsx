@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { href: "/", label: "HOME" },
   { href: "/about", label: "ABOUT" },
   { href: "/venue", label: "VENUE" },
+  { href: "/teams", label: "TEAMS" },
   { href: "/rsvp", label: "RSVP" },
   { href: "/wall", label: "YEAR END WALL" },
 ];
