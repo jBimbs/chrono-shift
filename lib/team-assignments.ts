@@ -44,7 +44,7 @@ export const TEAM_ASSIGNMENTS: Record<string, TeamAssignment> = {
   "lvargas@intercommerce.com.ph": { name: "Lloyd John Vargas", group: 3 },
   "ecarpio@intercommerce.com.ph": { name: "Exceil Carpio", group: 3 },
   "vpotestad@intercommerce.com.ph": { name: "Vin Potestad", group: 3 },
-  "ctampoya@ictechnologies.ph": { name: "Christian Gabrielle Tampoya", group: 3 },
+  "ctampoya@ictechnologies.ph": { name: "Christian Gabrielle Tampoya", group: 5 },
   "edwinrosadino1313@gmail.com": { name: "Edwin Rosadino", group: 3 },
   "jtongol@intercommerce.com.ph": { name: "Joseph Allan Tongol", group: 3 },
   "hsanjuan@ictechnologies.ph": { name: "Harren San Juan", group: 3 },
